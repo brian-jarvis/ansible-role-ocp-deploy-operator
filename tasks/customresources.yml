@@ -1,0 +1,36 @@
+
+# verify we have a file to process
+- name: Operator - Check if crd_template exists
+  stat:
+    path: "{{ crd_template_file }}"
+  register: template_stat
+
+- fail:
+    msg: "The CRD template file does not exist at '{{ crd_template_file }}'"
+  when: template_stat.stat.exists == true
+
+# process the file.
+- name: Operator - Read template file
+  set_fact:
+    templated_crd: "{{ lookup('template', crd_template_file) | from_yaml }}"
+
+- set_fact:
+    channel_kinds: "{{ operator.channel | json_query('currentCSVDesc.customresourcedefinitions.owned[*].kind') }}"
+
+# compare the kind in the template with the CRDs listed in the channel from the packagemanifest
+# This should help prevent adding random CRDs.
+- name: Operator - Verify the kind in the crd matches the channel
+  fail:
+    msg: "Kind '{{ templated_crd.kind }}' must be one of {{ channel_kinds | join(', ') }}"
+  when: templated_crd.kind not in channel_kinds
+  
+
+- name: Operator - Create CustomResource
+  delegate_to: localhost
+  k8s:
+    kind: "{{ templated_crd.kind }}"
+    name: "{{ templated_crd.metadata.name }}"
+    namespace: "{{ operator.namespace }}"
+    resource_definition: "{{ templated_crd }}"
+    state: "{{ operator.state | default('present') }}"
+    kubeconfig: "{{ kube_config_path }}"

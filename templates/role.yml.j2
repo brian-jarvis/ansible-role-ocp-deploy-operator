@@ -1,0 +1,9 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ rbac.role.kind }}
+metadata:
+  name: {{ rbac.role.name }}
+{% if rbac.role.kind == "Role" %}
+  namespace: {{ operator.namespace }}
+{% endif %}
+rules: 
+{{ rbac.role.rules | to_nice_yaml }}

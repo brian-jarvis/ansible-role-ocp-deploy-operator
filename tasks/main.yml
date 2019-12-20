@@ -1,0 +1,21 @@
+---
+
+- name: Initialize Operator Deploy
+  include_tasks: init.yml
+
+- name: Create Namespace
+  include_tasks: namespace.yml
+
+- name: Create OperatorGroup
+  include_tasks: operatorgroup.yml
+
+- name: Create Role and RoleBinding
+  include_tasks: role.yml
+  when: rbac.set_role
+
+- name: Create Subscription
+  include_tasks: subscription.yml
+
+- name: Create CustomResources
+  include_tasks: additionalresources.yml
+  when: additional_resource_templates is defined

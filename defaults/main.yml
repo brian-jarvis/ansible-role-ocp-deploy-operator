@@ -1,0 +1,15 @@
+---
+
+packagemanifest:
+  namespace: "{{ pck_namespace | default('openshift-marketplace') }}"
+  name: "{{ pck_name | default(mandatory) }}"
+
+operator:
+  namespace: "{{ op_namespace | default(mandatory) }}"
+  state: "{{ op_state | default('present') }}"
+  namespace_labels: "{{ op_ns_lables | default({}) }}"
+  namespace_annotations: "{{ op_ns_annotations | default({}) }}"
+op_channel_name_query: "status.channels[?name=='{{ pm_channelName }}']"
+
+rbac:
+  set_role: false

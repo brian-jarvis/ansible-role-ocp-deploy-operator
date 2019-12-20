@@ -1,0 +1,12 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  generateName: "{{ operator.name }}-"
+  namespace: "{{ operator.namespace }}" 
+spec:
+  channel: "{{ operator.channel.name }}" 
+  installPlanApproval: "Automatic"
+  source: "{{ catalogSource.name }}"
+  sourceNamespace: "{{ catalogSource.namespace }}" 
+  name: "{{ operator.name }}"
+

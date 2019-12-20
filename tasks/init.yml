@@ -1,0 +1,29 @@
+- name: Operator - Get PackageManifest
+  delegate_to: localhost
+  set_fact:
+    pm_result: "{{ lookup('k8s', kubeconfig=kube_config_path, kind='PackageManifest', namespace=packagemanifest.namespace, resource_name=packagemanifest.name) }}"
+
+- name: Operator - Set CatalogSource
+  set_fact:
+    catalogSource:
+      name: "{{ pm_result.status.catalogSource }}"
+      namespace: "{{ pm_result.status.catalogSourceNamespace }}"
+      channelName: "{{ pck_channelName | default(pm_result.status.defaultChannel) }}"
+
+- name: Operator - Set PackageManifest
+  set_fact:
+    pm_channelName: "{{ pck_channelName | default(pm_result.status.defaultChannel) }}"
+
+- name: Operator - Set Channel list query
+  set_fact:
+    ch_list: "{{ pm_result | json_query(op_channel_name_query) }}"
+
+- name: Operator - Set Operator from PackageManifest
+  set_fact:
+    operator:
+      namespace: "{{ op_namespace | default(mandatory) }}"
+      name: "{{ pm_result.metadata.name }}"
+      state: "{{ op_state | default('present') }}"
+      channel: "{{ ch_list[0] }}"
+      namespace_labels: "{{ op_ns_lables | default({}) }}"
+      namespace_annotations: "{{ op_ns_annotations | default({}) }}"  

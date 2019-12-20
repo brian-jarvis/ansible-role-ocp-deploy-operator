@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+{% if operator.namespace_annotations is defined %}
+{% for key, value in operator.namespace_annotations.items() %}
+      {{ key }}: "{{ value }}"
+{% endfor %}
+{% endif %}
+  name: {{ operator.namespace }}
+  labels: 
+{% if operator.namespace_labels is defined %}
+{% for key, value in operator.namespace_labels.items() %}
+      {{ key }}: "{{ value }}"
+{% endfor %}
+{% endif %}

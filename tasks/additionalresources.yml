@@ -1,0 +1,10 @@
+- debug:
+    var: additional_resource_templates
+
+- name: Process CustomResources
+  include_tasks: customresources.yml
+  vars:
+    crd_template_file: "{{ additional_resource }}"
+  loop: "{{ additional_resource_templates }}"
+  loop_control:
+    loop_var: additional_resource

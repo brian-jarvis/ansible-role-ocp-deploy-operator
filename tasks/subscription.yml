@@ -1,0 +1,11 @@
+  
+- name: Operator - Create Subscription
+  delegate_to: localhost
+  k8s:
+    kind: Subscription
+    name: "{{ operator.name }}"
+    namespace: "{{ operator.namespace }}"
+    resource_definition: "{{ lookup('template', 'subscription.yml.j2') }}"
+    state: "{{ operator.state | default('present') }}"
+    kubeconfig: "{{ kube_config_path }}"
+

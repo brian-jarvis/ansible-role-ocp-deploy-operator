@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ rbac.role.kind }}Binding
+metadata:
+  name: {{ rbac.role.name }}
+{% if rbac.role.kind == "Role" %}
+  namespace: {{ operator.namespace }}
+{% endif %}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: {{ rbac.role.kind }}
+  name: {{ rbac.role.name }}
+subjects:
+- kind: {{ rbac.rolebinding_subject.kind }}
+  name: {{ rbac.rolebinding_subject.name }}
+{% if rbac.role.kind == "Role" %}
+namespace: {{ operator.namespace }}
+{% endif %}

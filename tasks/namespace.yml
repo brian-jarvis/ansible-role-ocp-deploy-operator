@@ -1,0 +1,9 @@
+- name: Operator - Create Namespace
+  delegate_to: localhost
+  k8s:
+    kind: Namespace
+    name: "{{ operator.namespace }}"
+    resource_definition: "{{ lookup('template', 'namespace.yml.j2')}}"
+    state: "{{ operator.state | default('present') }}"
+    kubeconfig: "{{ kube_config_path }}"
+

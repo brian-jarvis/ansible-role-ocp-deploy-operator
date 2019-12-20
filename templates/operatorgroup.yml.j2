@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ operator.namespace }}
+{% if operatorgroup.spec is defined %}
+spec: 
+  {{ operatorgroup.spec | to_yaml }}
+{% else %}
+spec: {}
+{% endif %}
