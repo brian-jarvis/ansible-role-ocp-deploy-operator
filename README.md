@@ -11,7 +11,6 @@ Operator `PackageManifest` must be listed in the output of `oc get packagemanife
 Role Variables
 --------------
 
-Required Vars:
   - op_namespace: The namespace to deploy the operator
   - pck_name: The name of the `PackageManifest` to deploy.  List of available `PackageManifests` can be found by running `oc get packagemanifest`
   - pck_channelName: [optional] Specify the channel version to deploy, defaults to the `defaultChannel` listed in the `PackageManifest`
@@ -20,7 +19,8 @@ Required Vars:
   - rbac: [optional] Set Role and Rolebinding 
   - operatorgroup: [optional] Set spec on the `OperatorGroup`.
   - additional_resource_templates: [optional] List of template file to process to create `CustomResourceDefinitions`.  `Kind` in template is compared with listed types in `PackageManifest` for the operator being deployed.
-
+  - kube_config_path: Path to the KUBECONFIG file for access
+  
 Dependencies
 ------------
 
